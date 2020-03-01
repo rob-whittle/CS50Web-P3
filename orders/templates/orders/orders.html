@@ -1,0 +1,32 @@
+{% extends "orders/layout.html" %}
+
+{% block scripts %}
+
+{% load static %}
+
+{% endblock %}
+
+
+{% block body %}
+
+{% if order %}
+	{{order.order|safe}} - {{order.time}} - Status: {{ order.get_status_display }}
+{% endif %}
+
+{% if pending %}
+<h3>Pending Orders</h3>
+	{% for item in pending %}
+		{{item.order|safe}}
+		Order time: {{item.time}}
+	{% endfor %}
+{% endif %}
+
+{% if complete %}
+<h3>Complete Orders</h3>
+	{% for item in complete %}
+		{{item.order|safe}} - {{item.time}}
+	{% endfor %}
+{% endif %}
+
+
+{% endblock %}

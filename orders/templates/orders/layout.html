@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <!-- Compiled and minified JavaScript for Materialize CSS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <!-- Material design icons from google -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Local CSS -->
+        <!-- <link rel="stylesheet" href="project2.css">    -->
+        {% load static %}
+
+        {% block scripts %}
+
+        {% endblock %}
+        
+        <title>CS50 Web Project 3</title>
+    </head>
+
+
+    <body>
+        <nav class="nav-extended">
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">Pinnochio’s</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    {% include 'orders/includes/navbaritems.html' %}
+                </ul>
+            </div>
+<!--             <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    {% include 'orders/includes/menu_categories.html' %}                    
+                </ul>
+            </div> -->
+        </nav>
+
+        {% include 'orders/includes/messaging.html' %}
+
+        <div class="container">
+        {% block body %}
+        {% endblock %}
+        </div>
+    </body>
+</html>

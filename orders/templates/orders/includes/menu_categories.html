@@ -1,0 +1,8 @@
+{% if menu_titles %}
+	{% for menu_title in menu_titles%}
+     <li><a href="#">{{menu_title}}</a></li>
+     {% endfor %}
+{% else %}
+    <li><a href="#">menu1</a></li>
+    <li><a href="#">menu2</a></li>
+{% endif %}

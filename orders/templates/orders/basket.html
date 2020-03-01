@@ -1,0 +1,35 @@
+{% extends "orders/layout.html" %}
+
+{% block scripts %}
+
+{% load static %}
+<script src="{% static 'orders/js/basket.js' %}"></script>
+
+{% endblock %}
+
+
+{% block body %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+
+<ul id="basketitems">
+{% for item in pizza %}
+    <li>{{item.pizza.base}} {% if item.toppings %} | Toppings{% for topping in item.toppings %} - {{topping}}{% endfor %}{% endif %} <b>${{item.pizza.price}}</b></li>
+{% endfor %}
+{% for item in sub %}
+    <li>{{item.sub.item}} sub {{item.size}} {% if item.extras %} | Extras{% for extra in item.extras %} - {{extra}}{% endfor %}{% endif %} <b>${{item.price}}</b></li>
+{% endfor %}
+{% for item in other %}
+    <li>{{item.other.menu}} - {{item.other.name}} - {{item.other.size}} <b>${{item.other.price}}</b></li>
+{% endfor %}
+</ul>
+
+Order total: ${{price}}
+
+<button class="btn waves-effect waves-light" type="submit" id="checkout">Checkout
+<i class="material-icons right">send</i>
+</button>
+
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "orders/layout.html" %}
+
+
+
+{% block scripts %}
+
+{% load static %}
+<script src="{% static 'orders/js/menu.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+{{ pizza_data|json_script:"pizza-data" }}
+{{ sub_data|json_script:"sub-data" }}
+{{ sub_fillings_data|json_script:"filling-data" }}
+{{ sub_extras_data|json_script:"extra-data" }}
+{{ others_data|json_script:"others-data" }}
+
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+
+<!-- USE HANDLEBARS TO UPDATE BASKET TOTAL - DICE EXAMPLE??
+	DONT SENT ANYTHING TO SERVER UNTIL CHECKOUT? -->
+
+	<!-- build menu headings -->
+    {% for menu_title in menu_titles %}
+        <div id="{{menu_title}}">
+            <h3>{{menu_title}}</h3>
+
+            {% if menu_title.category == "Pizza" %}
+				 <div class="row">
+				 <!-- pizza bases -->
+  	            	{% for base in pizza_bases %}
+					    <div class="col s12 m6">
+					      <div class="card blue-grey darken-1" name="{{base.id}}" id="Pizza_base">
+					        <div class="card-content white-text">
+					          <span class="card-title">{{base.size}} {{base.style}}</span>
+					          <p>{{base.slices}} - slices</p>
+					        </div>
+					      </div>
+					    </div>
+    			  	{% endfor %}
+				 </div>
+		 
+		 <!-- pizza prices -->	 
+			<div class="row" id="prices">
+				<h5> Toppings </h5>
+				{% for pizza in pizzas %}	
+					<span hidden class="base-{{pizza.base.id}}" id="{{pizza.id}}" name="{{pizza.toppings}}">
+						{{pizza.get_toppings_display}} - ${{pizza.price}} |
+					</span>
+				{% endfor %}
+			</div>
+				 
+			 <!-- pizza toppings -->				
+			<div class="row" id="toppings">
+			{% for topping in pizza_toppings %}
+				<a class="waves-effect waves-teal btn-flat" id="topping" name="{{topping.id}}">{{topping}}</a>				
+			{% endfor %}
+			</div>
+			<!-- add to order -->
+			<div class=row id=pizza_summary>
+				<span>Select a base first</span>
+				<a class="waves-effect waves-light btn" id="addToOrder_Pizza">Add to order</a>
+			</div>	
+			
+			{% endif %}
+
+
+            {% if menu_title.category == "Subs" %}
+				<div class="row">
+				 <!-- sub sizes -->					
+  	            	{% for size, value in subs.first.SIZE_CHOICES %}
+					    <div class="col s12 m6">
+					      <div class="card blue-grey darken-1" name="{{size}}" id="Sub_size">
+					        <div class="card-content white-text">
+					          <span class="card-title">{{value}}</span>
+					          
+					        </div>
+					      </div>
+					    </div>
+    			  	{% endfor %}
+				</div>
+				<!-- sub fillings -->
+				<div class="row" id="fillings">
+					<h5> Fillings </h5>
+					{% for filling in sub_fillings %}
+						<a class="waves-effect waves-teal btn-flat" name="{{filling.id}}" id="filling">{{filling}}</a>
+					{% endfor %}
+				</div>
+				 <!-- sub extras -->
+	 				<div class="row" id="extras">
+	 				<h5> Extras </h5>	
+					{% for extra in sub_extras %}
+						<a class="waves-effect waves-teal btn-flat" name="{{extra.id}}" id="extra">{{extra}}</a>
+					{% endfor %}
+				</div>
+				<!-- add to order -->
+				<div class=row id="sub_summary">
+					<span>Select a size and a filling first</span>
+					<a class="waves-effect waves-light btn disabled" id="addToOrder_Sub">Add to order</a>
+				</div>				
+
+			{% endif %}
+
+            <!-- add items from 'other' table to appropriate category -->
+		    {% for item in others %}
+	    		{% if item.menu == menu_title %}
+			            <a class="waves-effect waves-teal btn-flat" name="{{item.id}}" id="other">{{item}}</a>
+		        {% endif %}       
+		    {% endfor %} 
+	    	<!-- add to order -->
+	    	{% if menu_title.category != "Pizza" and menu_title.category != "Subs" %}
+			<div class=row id="other_summary_{{menu_title.id}}">
+				<span>Select a pasta, salad or dinner platter</span>
+				<a class="waves-effect waves-light btn disabled" id="addToOrder_{{menu_title.id}}">Add to order</a>
+			</div>	
+			{% endif %}
+		</div>
+
+            <!-- add items to appropriate category -->
+<!-- 		    {% for menu_name, menu_items in menu_items.items %}
+		    	{% for item in menu_items %}
+		    		{% if item.menu == menu_title %}
+				        <li>
+				            <a href="#">{{item}}</a>
+				        </li>		
+			        {% endif %}
+		        {% endfor %}        
+		    {% endfor %}  -->
+
+
+
+    {% endfor %}
+
+{% endblock %}

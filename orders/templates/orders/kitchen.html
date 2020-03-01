@@ -1,0 +1,37 @@
+{% extends "orders/layout.html" %}
+
+{% block scripts %}
+
+{% load static %}
+<script src="{% static 'orders/js/kitchen.js' %}"></script>
+
+{% endblock %}
+
+
+{% block body %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+
+<h3>Pending Orders</h3>
+{% if pending %}
+		{% for item in pending %}
+		<ul class="collection with-header">
+			<li class="collection-header"><h6>{{item.time}}</h6></li>
+			<li class="collection-item">{{item.order|safe}}<label class="secondary-content"><input type="checkbox" class="complete" id="{{item.id}}"><span>Complete</span></label></li>
+		</ul>		
+		{% endfor %}
+
+{% else %} No pending orders
+{% endif %}
+
+<h3>Complete Orders</h3>
+{% if complete %}
+	{% for item in complete %}
+		{{item.order|safe}} - {{item.time}} - {{ item.get_status_display }}
+	{% endfor %}
+{% else %} No past orders
+{% endif %}
+
+
+{% endblock %}
